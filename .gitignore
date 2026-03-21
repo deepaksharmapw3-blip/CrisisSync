@@ -1,0 +1,9 @@
+﻿crisissync-*/node_modules/
+crisissync-*/.next/
+crisissync-*/.env*
+crisissync-*/__pycache__/
+crisissync-*/venv/
+crisissync-*/*.pyc
+crisissync-*/.DS_Store
+*.log
+
