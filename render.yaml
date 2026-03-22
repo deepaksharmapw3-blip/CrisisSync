@@ -3,9 +3,10 @@ services:
   - type: web
     name: crisissync-api
     env: docker
+    region: oregon
+    plan: free
     dockerContext: ./crisissync-backend
     dockerfilePath: Dockerfile
-    plan: free
     healthCheckPath: /health
     envVars:
       - key: DATABASE_URL
@@ -26,15 +27,16 @@ services:
       - key: ALLOWED_ORIGINS
         value: '["https://your-netlify-app-url.netlify.app"]'
 
-  # ── Redis ─────────────────────────────────────────────────────────────────
+  # ── Redis (Free Tier) ─────────────────────────────────────────────────────
   - type: redis
     name: crisissync-redis
+    region: oregon
     plan: free
-    ipAllowList: [] # Internal only
 
-# ── Database ──────────────────────────────────────────────────────────────────
+# ── Database (Free Tier) ────────────────────────────────────────────────────
 databases:
   - name: crisissync-db
     databaseName: crisissync
     user: crisissync
+    region: oregon
     plan: free
