@@ -7,6 +7,7 @@ services:
     dockerfilePath: Dockerfile
     plan: free
     healthCheckPath: /health
+    preDeployCommand: alembic upgrade head
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -18,7 +19,8 @@ services:
           name: crisissync-redis
           property: connectionString
       - key: ANTHROPIC_API_KEY
-        generateValue: false # Set manually in dashboard
+        sync: false
+        value: "" # Set manually in dashboard
       - key: SECRET_KEY
         generateValue: true
       - key: APP_ENV

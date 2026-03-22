@@ -4,7 +4,7 @@ All environment variables with sensible defaults for development.
 """
 
 from pydantic_settings import BaseSettings
-from pydantic import field_validator
+from pydantic import field_validator, model_validator
 from typing import List
 import secrets
 
@@ -27,6 +27,27 @@ class Settings(BaseSettings):
 
     # ── Redis ─────────────────────────────────────────────────────────────────
     REDIS_URL: str = "redis://localhost:6379/0"
+    
+    @model_validator(mode="before")
+    @classmethod
+    def validate_urls(cls, data: dict) -> dict:
+        """Handle Render/Railway DATABASE_URL transformation."""
+        db_url = data.get("DATABASE_URL")
+        if db_url and isinstance(db_url, str):
+            # Derive sync URL for migrations if not explicitly set
+            if "+asyncpg" not in db_url:
+                data["DATABASE_URL_SYNC"] = db_url.replace("postgresql://", "postgres://", 1) if db_url.startswith("postgresql://") else db_url
+                data["DATABASE_URL"] = db_url.replace("postgres://", "postgresql+asyncpg://", 1).replace("postgresql://", "postgresql+asyncpg://", 1)
+            else:
+                data["DATABASE_URL_SYNC"] = db_url.replace("postgresql+asyncpg://", "postgresql://", 1)
+        
+        # Standardize Redis URL (Render sometimes provides rediss:// but some libs prefer redis:// if not truly SSL)
+        redis_url = data.get("REDIS_URL")
+        if redis_url and isinstance(redis_url, str) and redis_url.startswith("rediss://"):
+             # Optional: handle TLS for redis if needed by the app
+             pass
+             
+        return data
     CACHE_TTL_SECONDS: int = 300                      # 5 min default cache
 
     # ── Anthropic ─────────────────────────────────────────────────────────────
