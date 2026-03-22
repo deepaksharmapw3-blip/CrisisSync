@@ -29,6 +29,7 @@ services:
   # ── Redis ─────────────────────────────────────────────────────────────────
   - type: redis
     name: crisissync-redis
+    plan: free
     ipAllowList: [] # Internal only
 
 # ── Database ──────────────────────────────────────────────────────────────────
