@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[context.production.environment]
+  # Update these in Netlify Dashboard after backend deployment
+  NEXT_PUBLIC_API_URL = "https://your-render-app-url.onrender.com/api/v1"
+  NEXT_PUBLIC_WS_URL = "wss://your-render-app-url.onrender.com/ws"
