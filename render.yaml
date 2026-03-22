@@ -6,7 +6,7 @@ services:
     region: oregon
     plan: free
     dockerContext: ./crisissync-backend
-    dockerfilePath: Dockerfile
+    dockerfilePath: ./crisissync-backend/Dockerfile
     healthCheckPath: /health
     envVars:
       - key: DATABASE_URL
