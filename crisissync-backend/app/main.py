@@ -24,8 +24,12 @@ manager = ConnectionManager()
 async def lifespan(app: FastAPI):
     """Startup / shutdown lifecycle."""
     logger.info("🚨 CrisisSync API starting up...")
-    await init_db()
-    logger.info("✅ Database initialized")
+    try:
+        await init_db()
+        logger.info("✅ Database initialized successfully")
+    except Exception as e:
+        logger.error(f"❌ Database initialization failed: {e}")
+        logger.warning("⚠️ App starting without database! Fix connection variables in Railway.")
     yield
     logger.info("🛑 CrisisSync API shutting down...")
 
@@ -53,7 +57,7 @@ A real-time emergency management system for hospitality properties.
 app.add_middleware(GZipMiddleware, minimum_size=500)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.ALLOWED_ORIGINS,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
