@@ -33,7 +33,7 @@ services:
     region: oregon
     plan: free
     ipAllowList:
-      - cidr: 0.0.0.0/0
+      - source: 0.0.0.0/0
         description: all
 
 # ── Database (Free Tier) ────────────────────────────────────────────────────
@@ -42,5 +42,5 @@ databases:
     region: oregon
     plan: free
     ipAllowList:
-      - cidr: 0.0.0.0/0
+      - source: 0.0.0.0/0
         description: all
