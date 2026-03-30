@@ -7,8 +7,8 @@
  *   const incidents = await api.incidents.list()
  */
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1"
-const WS_BASE = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8000/ws"
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://crisissync-api.onrender.com/api/v1"
+const WS_BASE = process.env.NEXT_PUBLIC_WS_URL || "wss://crisissync-api.onrender.com/ws"
 
 // ── Token helpers ─────────────────────────────────────────────────────────────
 const getToken = () =>
@@ -378,7 +378,9 @@ export class CrisisSyncWS {
   private ws: WebSocket | null = null
   private incidentId: number | null = null
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null
-  private handlers: Map<string, ((data: unknown) => void)[]> = new Map()
+  private handlers: Map<string, ((data: any) => void)[]> = new Map()
+  private onConnectHandlers: (() => void)[] = []
+  private onDisconnectHandlers: (() => void)[] = []
 
   /**
    * Connect to an incident's real-time chat room.
@@ -393,18 +395,24 @@ export class CrisisSyncWS {
     this.incidentId = incidentId
     this.ws = new WebSocket(url)
 
+    this.ws.onopen = () => {
+      console.info("CrisisSync WS established")
+      this.onConnectHandlers.forEach(h => h())
+    }
+
     this.ws.onmessage = (event) => {
       try {
         const payload = JSON.parse(event.data)
         const handlers = this.handlers.get(payload.type) || []
         handlers.forEach((h) => h(payload))
-        // Also call wildcard handlers
         const wildcards = this.handlers.get("*") || []
         wildcards.forEach((h) => h(payload))
       } catch { /* ignore malformed */ }
     }
 
     this.ws.onclose = () => {
+      this.onDisconnectHandlers.forEach(h => h())
+      if (this.reconnectTimer) clearTimeout(this.reconnectTimer)
       this.reconnectTimer = setTimeout(() => this.connect(incidentId), 3000)
     }
 
@@ -412,6 +420,16 @@ export class CrisisSyncWS {
       console.warn("CrisisSync WS error", e)
     }
 
+    return this
+  }
+
+  onConnect(handler: () => void) {
+    this.onConnectHandlers.push(handler)
+    return this
+  }
+
+  onDisconnect(handler: () => void) {
+    this.onDisconnectHandlers.push(handler)
     return this
   }
 

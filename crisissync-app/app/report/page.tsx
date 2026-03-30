@@ -131,8 +131,8 @@ function ReportContent() {
       setLocation("")
       setNotes("")
       setGpsCoords(null)
-    } catch (error) {
-      toast.error("CONNECTION ERROR: SYSTEM OFFLINE")
+    } catch (error: any) {
+      toast.error(`CONNECTION ERROR: ${error.message || "SYSTEM OFFLINE"}`)
     } finally {
       setIsSubmitting(false)
     }

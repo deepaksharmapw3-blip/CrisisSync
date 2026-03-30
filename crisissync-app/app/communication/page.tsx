@@ -50,8 +50,8 @@ function CommunicationContent() {
         if (incRes.incidents.length > 0) {
           setSelectedIncidentId(incRes.incidents[0].id)
         }
-      } catch (err) {
-        toast.error("COMMUNICATION ERROR: SYSTEM OFFLINE")
+      } catch (err: any) {
+        toast.error(`COMMUNICATION ERROR: ${err.message || "SYSTEM OFFLINE"}`)
       } finally {
         setLoading(false)
       }

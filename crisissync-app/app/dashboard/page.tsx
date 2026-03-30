@@ -183,14 +183,18 @@ function DashboardContent() {
   useEffect(() => {
     let ws: CrisisSyncWS | null = null
     try {
-      ws = new CrisisSyncWS().connect(null)
-      setWsConnected(true)
+      ws = new CrisisSyncWS()
+      ws.onConnect(() => setWsConnected(true))
+      ws.onDisconnect(() => setWsConnected(false))
+      ws.connect(null)
+
       ws.on("incident_new", () => {
         toast.info("🚨 SYSTEM ALERT: NEW INCIDENT DETECTED")
         fetchIncidents()
       })
       ws.on("incident_update", () => fetchIncidents())
-    } catch {
+    } catch (e) {
+      console.error("Dashboard WS setup error", e)
       setWsConnected(false)
     }
     return () => { ws?.disconnect(); setWsConnected(false) }

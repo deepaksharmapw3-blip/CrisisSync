@@ -29,8 +29,8 @@ class VisitorTrackingMiddleware(BaseHTTPMiddleware):
     """Tracks visitor sessions and per-request activity."""
 
     async def dispatch(self, request: Request, call_next):
-        # Skip health/docs endpoints
-        if request.url.path in SKIP_PATHS or request.url.path.startswith("/static"):
+        # Skip health/docs/ws endpoints
+        if request.url.path in SKIP_PATHS or request.url.path.startswith("/static") or request.url.path.startswith("/ws"):
             return await call_next(request)
 
         start_time = time.perf_counter()
