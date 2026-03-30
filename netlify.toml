@@ -6,6 +6,6 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-[context.production.environment]
+[build.environment]
   NEXT_PUBLIC_API_URL = "https://crisissync-api.onrender.com/api/v1"
   NEXT_PUBLIC_WS_URL = "wss://crisissync-api.onrender.com/ws"
