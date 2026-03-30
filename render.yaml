@@ -6,7 +6,7 @@ services:
     region: oregon
     plan: free
     dockerContext: ./crisissync-backend
-    dockerfilePath: ./crisissync-backend/Dockerfile
+    dockerfilePath: Dockerfile
     healthCheckPath: /health
     envVars:
       - key: DATABASE_URL
@@ -41,3 +41,4 @@ databases:
     user: crisissync
     region: oregon
     plan: free
+    ipAllowList: [] # Internal only for maximum security and validation fix
