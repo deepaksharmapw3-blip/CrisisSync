@@ -32,13 +32,15 @@ services:
     name: crisissync-redis
     region: oregon
     plan: free
-    ipAllowList: [] # This restricts access to only Render services (internal)
+    ipAllowList:
+      - cidr: 0.0.0.0/0
+        description: all
 
 # ── Database (Free Tier) ────────────────────────────────────────────────────
 databases:
   - name: crisissync-db
-    databaseName: crisissync
-    user: crisissync
     region: oregon
     plan: free
-    ipAllowList: [] # Internal only for maximum security and validation fix
+    ipAllowList:
+      - cidr: 0.0.0.0/0
+        description: all
