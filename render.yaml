@@ -25,7 +25,7 @@ services:
       - key: APP_ENV
         value: production
       - key: ALLOWED_ORIGINS
-        value: '["*"]' # Temporarily allow all during initial setup
+        value: '["https://crisissync.netlify.app", "http://localhost:3000"]'
 
   # ── Redis (Free Tier) ─────────────────────────────────────────────────────
   - type: redis
