@@ -25,7 +25,7 @@ services:
       - key: APP_ENV
         value: production
       - key: ALLOWED_ORIGINS
-        value: "https://crisissync.netlify.app,https://www.crisissync.netlify.app,http://localhost:3000"
+        value: "https://crisissync.netlify.app,https://crisissync.netlify.app/,https://www.crisissync.netlify.app,https://www.crisissync.netlify.app/,http://localhost:3000"
 
   # ── Redis (Free Tier) ─────────────────────────────────────────────────────
   - type: redis
