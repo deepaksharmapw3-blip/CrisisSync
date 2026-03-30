@@ -147,30 +147,44 @@ async def get_visitor_timeline(
     db: AsyncSession = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
-    """Daily visitor and page-view counts for chart rendering."""
+    """Daily visitor and page-view counts for chart rendering (Optimized)."""
     _require_manager(current_user)
+    since = datetime.now(timezone.utc) - timedelta(days=days)
+    
+    # ── Group visitors by day ──────────────────────────────────────────────
+    visitor_q = await db.execute(
+        select(
+            func.date(VisitorSession.first_seen).label("day"),
+            func.count(distinct(VisitorSession.ip_address)).label("count")
+        )
+        .where(VisitorSession.first_seen >= since)
+        .group_by("day")
+        .order_by("day")
+    )
+    visitor_map = {str(row[0]): row[1] for row in visitor_q.all()}
+
+    # ── Group page views by day ───────────────────────────────────────────
+    activity_q = await db.execute(
+        select(
+            func.date(UserActivity.timestamp).label("day"),
+            func.count(UserActivity.id).label("count")
+        )
+        .where(UserActivity.timestamp >= since)
+        .group_by("day")
+        .order_by("day")
+    )
+    activity_map = {str(row[0]): row[1] for row in activity_q.all()}
+
+    # ── Merge into timeline ───────────────────────────────────────────────
     results = []
     now = datetime.now(timezone.utc)
-
     for i in range(days, -1, -1):
-        day = now - timedelta(days=i)
-        day_start = day.replace(hour=0, minute=0, second=0, microsecond=0)
-        day_end = day_start + timedelta(days=1)
-
-        visitors = (await db.execute(
-            select(func.count(distinct(VisitorSession.ip_address)))
-            .where(VisitorSession.first_seen >= day_start, VisitorSession.first_seen < day_end)
-        )).scalar() or 0
-
-        page_views = (await db.execute(
-            select(func.count(UserActivity.id))
-            .where(UserActivity.timestamp >= day_start, UserActivity.timestamp < day_end)
-        )).scalar() or 0
-
+        day = (now - timedelta(days=i)).date()
+        day_str = str(day)
         results.append(VisitorTimelinePoint(
-            date=day_start.strftime("%Y-%m-%d"),
-            visitors=visitors,
-            page_views=page_views,
+            date=day_str,
+            visitors=visitor_map.get(day_str, 0),
+            page_views=activity_map.get(day_str, 0),
         ))
 
     return results
