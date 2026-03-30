@@ -165,11 +165,11 @@ async def risk_assessment(
     Claude reviews recent incident patterns and provides a
     property-wide risk assessment with prevention recommendations.
     """
-    from datetime import timedelta
+    from datetime import timedelta, timezone
     from datetime import datetime
     result = await db.execute(
         select(Incident)
-        .where(Incident.reported_at >= datetime.utcnow() - timedelta(days=30))
+        .where(Incident.reported_at >= datetime.now(timezone.utc) - timedelta(days=30))
         .order_by(Incident.reported_at.desc())
         .limit(50)
     )

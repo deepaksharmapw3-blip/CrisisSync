@@ -55,8 +55,6 @@ A real-time emergency management system for hospitality properties.
 )
 
 # ── Middleware ────────────────────────────────────────────────────────────────
-app.add_middleware(VisitorTrackingMiddleware)      # visitor/user activity tracking
-app.add_middleware(GZipMiddleware, minimum_size=500)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,
@@ -64,6 +62,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(VisitorTrackingMiddleware)      # visitor/user activity tracking
+app.add_middleware(GZipMiddleware, minimum_size=500)
 
 # ── Routers ───────────────────────────────────────────────────────────────────
 app.include_router(auth.router,         prefix="/api/v1/auth",      tags=["Auth"])

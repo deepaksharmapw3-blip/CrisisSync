@@ -52,7 +52,7 @@ class Settings(BaseSettings):
 
     # ── Anthropic ─────────────────────────────────────────────────────────────
     ANTHROPIC_API_KEY: str = ""
-    CLAUDE_MODEL: str = "claude-sonnet-4-20250514"
+    CLAUDE_MODEL: str = "claude-3-5-sonnet-20241022"
     AI_MAX_TOKENS: int = 1024
 
     # ── CORS ──────────────────────────────────────────────────────────────────

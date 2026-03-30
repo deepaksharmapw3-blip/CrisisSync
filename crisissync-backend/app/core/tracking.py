@@ -7,6 +7,7 @@ and maintains visitor sessions.
 import time
 import uuid
 import logging
+import asyncio
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
@@ -46,10 +47,7 @@ class VisitorTrackingMiddleware(BaseHTTPMiddleware):
         duration_ms = (time.perf_counter() - start_time) * 1000
 
         # Log activity in the background (don't block the response)
-        try:
-            await self._log_activity(request, response, visitor_id, new_session, duration_ms)
-        except Exception as e:
-            logger.warning(f"Failed to log visitor activity: {e}")
+        asyncio.create_task(self._log_activity(request, response, visitor_id, new_session, duration_ms))
 
         # Set session cookie
         if new_session:
