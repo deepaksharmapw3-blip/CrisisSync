@@ -18,7 +18,8 @@ const translations: Translations = {
   'nav.report': { en: 'Report', hi: 'रिपोर्ट' },
   'nav.communication': { en: 'Communication', hi: 'संचार' },
   'nav.analytics': { en: 'Analytics', hi: 'विश्लेषण' },
-  
+  'nav.visitors': { en: 'Visitors', hi: 'विज़िटर्स' },
+
   // Landing Page
   'landing.headline': { en: 'Accelerated Emergency Response in Hospitality', hi: 'आतिथ्य में त्वरित आपातकालीन प्रतिक्रिया' },
   'landing.description': { en: 'Coordinate crisis response in real-time. Protect your guests, staff, and property with our intelligent emergency management platform.', hi: 'वास्तविक समय में संकट प्रतिक्रिया समन्वय करें। हमारे बुद्धिमान आपातकालीन प्रबंधन प्लेटफॉर्म के साथ अपने मेहमानों, कर्मचारियों और संपत्ति की रक्षा करें।' },
@@ -28,7 +29,7 @@ const translations: Translations = {
   'landing.stats.incidents': { en: 'Incidents Resolved', hi: 'घटनाएं हल' },
   'landing.stats.uptime': { en: 'System Uptime', hi: 'सिस्टम अपटाइम' },
   'landing.stats.properties': { en: 'Properties Protected', hi: 'संरक्षित संपत्तियां' },
-  
+
   // Features
   'features.realtime': { en: 'Real-time Coordination', hi: 'वास्तविक समय समन्वय' },
   'features.realtimeDesc': { en: 'Instant alerts and communication between all stakeholders during emergencies.', hi: 'आपातकाल के दौरान सभी हितधारकों के बीच तत्काल अलर्ट और संचार।' },
@@ -36,7 +37,7 @@ const translations: Translations = {
   'features.analyticsDesc': { en: 'Data-driven insights to improve response times and prevent future incidents.', hi: 'प्रतिक्रिया समय में सुधार और भविष्य की घटनाओं को रोकने के लिए डेटा-संचालित अंतर्दृष्टि।' },
   'features.multilingual': { en: 'Multilingual Support', hi: 'बहुभाषी समर्थन' },
   'features.multilingualDesc': { en: 'Communicate effectively with international guests and diverse staff.', hi: 'अंतरराष्ट्रीय मेहमानों और विविध कर्मचारियों के साथ प्रभावी ढंग से संवाद करें।' },
-  
+
   // Dashboard
   'dashboard.title': { en: 'Crisis Dashboard', hi: 'संकट डैशबोर्ड' },
   'dashboard.activeCrises': { en: 'Active Crises', hi: 'सक्रिय संकट' },
@@ -44,7 +45,7 @@ const translations: Translations = {
   'dashboard.pending': { en: 'Pending Review', hi: 'समीक्षा लंबित' },
   'dashboard.filter': { en: 'Filter', hi: 'फ़िल्टर' },
   'dashboard.search': { en: 'Search incidents...', hi: 'घटनाएं खोजें...' },
-  
+
   // Report
   'report.title': { en: 'Report Emergency', hi: 'आपातकाल की रिपोर्ट करें' },
   'report.selectType': { en: 'Select Emergency Type', hi: 'आपातकाल प्रकार चुनें' },
@@ -57,18 +58,18 @@ const translations: Translations = {
   'report.notes': { en: 'Additional Notes (Optional)', hi: 'अतिरिक्त नोट्स (वैकल्पिक)' },
   'report.notesPlaceholder': { en: 'Describe the situation...', hi: 'स्थिति का वर्णन करें...' },
   'report.submit': { en: 'Submit Report', hi: 'रिपोर्ट जमा करें' },
-  
+
   // Communication
   'communication.title': { en: 'Communication Hub', hi: 'संचार केंद्र' },
   'communication.sendMessage': { en: 'Send Message', hi: 'संदेश भेजें' },
   'communication.placeholder': { en: 'Type your message...', hi: 'अपना संदेश टाइप करें...' },
-  
+
   // Analytics
   'analytics.title': { en: 'Analytics Overview', hi: 'विश्लेषण अवलोकन' },
   'analytics.responseTime': { en: 'Response Time Trends', hi: 'प्रतिक्रिया समय रुझान' },
   'analytics.incidentFrequency': { en: 'Incident Frequency', hi: 'घटना आवृत्ति' },
   'analytics.resolution': { en: 'Resolution Stats', hi: 'समाधान आंकड़े' },
-  
+
   // Common
   'common.status.active': { en: 'Active', hi: 'सक्रिय' },
   'common.status.resolved': { en: 'Resolved', hi: 'हल किया गया' },
@@ -78,7 +79,7 @@ const translations: Translations = {
   'common.language': { en: 'Language', hi: 'भाषा' },
   'common.accessibility': { en: 'Accessibility', hi: 'पहुंच' },
   'common.largeText': { en: 'Large Text', hi: 'बड़ा टेक्स्ट' },
-  
+
   // Roles
   'role.guest': { en: 'Guest', hi: 'अतिथि' },
   'role.staff': { en: 'Staff', hi: 'स्टाफ' },

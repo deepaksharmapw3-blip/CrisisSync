@@ -29,6 +29,7 @@ import {
   Type,
   Home,
   Zap,
+  Users,
 } from "lucide-react"
 
 const navItems = [
@@ -37,6 +38,7 @@ const navItems = [
   { href: "/report", labelKey: "nav.report", icon: FileWarning },
   { href: "/communication", labelKey: "nav.communication", icon: MessageSquare },
   { href: "/analytics", labelKey: "nav.analytics", icon: BarChart3 },
+  { href: "/visitors", labelKey: "nav.visitors", icon: Users },
 ]
 
 export function Navbar() {
@@ -117,9 +119,9 @@ export function Navbar() {
           {/* Language Toggle */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="icon" 
+              <Button
+                variant="ghost"
+                size="icon"
                 aria-label={t("common.language")}
                 className="rounded-xl hover:bg-primary/10 hover:text-primary transition-all duration-200"
               >
@@ -139,9 +141,9 @@ export function Navbar() {
           {/* Accessibility Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="icon" 
+              <Button
+                variant="ghost"
+                size="icon"
                 aria-label={t("common.accessibility")}
                 className="rounded-xl hover:bg-primary/10 hover:text-primary transition-all duration-200"
               >
@@ -159,10 +161,10 @@ export function Navbar() {
           {/* Mobile Menu */}
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="md:hidden rounded-xl hover:bg-primary/10 hover:text-primary transition-all duration-200" 
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden rounded-xl hover:bg-primary/10 hover:text-primary transition-all duration-200"
                 aria-label="Menu"
               >
                 <Menu className="h-5 w-5" />

@@ -11,8 +11,9 @@ import logging
 
 from app.core.config import settings
 from app.core.database import init_db
-from app.routers import auth, incidents, messages, analytics, ai_features, users, websocket_router
+from app.routers import auth, incidents, messages, analytics, ai_features, users, websocket_router, visitors
 from app.websocket.manager import ConnectionManager
+from app.core.tracking import VisitorTrackingMiddleware
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -54,6 +55,7 @@ A real-time emergency management system for hospitality properties.
 )
 
 # ── Middleware ────────────────────────────────────────────────────────────────
+app.add_middleware(VisitorTrackingMiddleware)      # visitor/user activity tracking
 app.add_middleware(GZipMiddleware, minimum_size=500)
 app.add_middleware(
     CORSMiddleware,
@@ -71,6 +73,7 @@ app.include_router(messages.router,     prefix="/api/v1/messages",  tags=["Messa
 app.include_router(analytics.router,    prefix="/api/v1/analytics", tags=["Analytics"])
 app.include_router(ai_features.router,  prefix="/api/v1/ai",        tags=["AI Features"])
 app.include_router(websocket_router.router, prefix="/ws",           tags=["WebSocket"])
+app.include_router(visitors.router,         prefix="/api/v1/visitors", tags=["Visitors"])
 
 @app.get("/", tags=["Health"])
 async def root():

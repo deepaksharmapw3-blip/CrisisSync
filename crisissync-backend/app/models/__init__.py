@@ -4,10 +4,12 @@ from app.models.user import User, UserRole
 from app.models.incident import Incident, IncidentType, IncidentStatus, IncidentSeverity
 from app.models.message import Message, MessageType
 from app.models.notification import Notification, NotificationType
+from app.models.visitor import VisitorSession, UserActivity
 
 __all__ = [
     "User", "UserRole",
     "Incident", "IncidentType", "IncidentStatus", "IncidentSeverity",
     "Message", "MessageType",
     "Notification", "NotificationType",
+    "VisitorSession", "UserActivity",
 ]

@@ -25,7 +25,7 @@ services:
       - key: APP_ENV
         value: production
       - key: ALLOWED_ORIGINS
-        value: '["https://your-netlify-app-url.netlify.app"]'
+        value: '["*"]' # Temporarily allow all during initial setup
 
   # ── Redis (Free Tier) ─────────────────────────────────────────────────────
   - type: redis

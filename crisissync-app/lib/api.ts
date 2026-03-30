@@ -158,6 +158,54 @@ export interface AnalyticsSummary {
   hourly_heatmap: Array<{ hour: number; count: number }>
 }
 
+export interface VisitorSession {
+  id: number
+  session_id: string
+  ip_address?: string
+  browser?: string
+  os?: string
+  device_type?: string
+  country?: string
+  city?: string
+  referrer?: string
+  user_id?: number
+  is_authenticated: boolean
+  first_seen: string
+  last_seen: string
+  total_page_views: number
+}
+
+export interface VisitorActivity {
+  id: number
+  method: string
+  path: string
+  full_url?: string
+  status_code?: number
+  response_time_ms?: number
+  user_id?: number
+  timestamp: string
+}
+
+export interface VisitorStats {
+  total_visitors: number
+  total_sessions: number
+  total_page_views: number
+  authenticated_sessions: number
+  unique_countries: number
+  avg_page_views_per_session: number
+  top_pages: Array<{ page: string; hits: number }>
+  top_countries: Array<{ country: string; count: number }>
+  top_browsers: Array<{ browser: string; count: number }>
+  top_devices: Array<{ device: string; count: number }>
+  recent_visitors: VisitorSession[]
+}
+
+export interface VisitorTimelinePoint {
+  date: string
+  visitors: number
+  page_views: number
+}
+
 // ── Auth ──────────────────────────────────────────────────────────────────────
 export const authApi = {
   async register(data: {
@@ -300,6 +348,31 @@ export const usersApi = {
   },
 }
 
+// ── Visitors & Activity ───────────────────────────────────────────────────────
+export const visitorsApi = {
+  async getStats(days = 30) {
+    return apiFetch<VisitorStats>(`/visitors/stats?days=${days}`)
+  },
+  async getTimeline(days = 30) {
+    return apiFetch<VisitorTimelinePoint[]>(`/visitors/timeline?days=${days}`)
+  },
+  async listSessions(params?: { skip?: number; limit?: number; authenticated_only?: boolean }) {
+    const q = new URLSearchParams()
+    if (params?.skip) q.set("skip", String(params.skip))
+    if (params?.limit) q.set("limit", String(params.limit))
+    if (params?.authenticated_only) q.set("authenticated_only", "true")
+    return apiFetch<VisitorSession[]>(`/visitors/sessions?${q}`)
+  },
+  async listActivities(params?: { skip?: number; limit?: number; path_filter?: string; user_id?: number }) {
+    const q = new URLSearchParams()
+    if (params?.skip) q.set("skip", String(params.skip))
+    if (params?.limit) q.set("limit", String(params.limit))
+    if (params?.path_filter) q.set("path_filter", params.path_filter)
+    if (params?.user_id) q.set("user_id", String(params.user_id))
+    return apiFetch<VisitorActivity[]>(`/visitors/activities?${q}`)
+  },
+}
+
 // ── WebSocket Client ──────────────────────────────────────────────────────────
 export class CrisisSyncWS {
   private ws: WebSocket | null = null
@@ -373,6 +446,7 @@ export const api = {
   analytics: analyticsApi,
   ai: aiApi,
   users: usersApi,
+  visitors: visitorsApi,
   ws: (incidentId?: number) => new CrisisSyncWS().connect(incidentId ?? null),
 }
 
