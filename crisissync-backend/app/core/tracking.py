@@ -25,41 +25,46 @@ SKIP_PATHS = {"/health", "/docs", "/redoc", "/openapi.json", "/favicon.ico"}
 SESSION_COOKIE_NAME = "crisissync_visitor_id"
 
 
-class VisitorTrackingMiddleware(BaseHTTPMiddleware):
-    """Tracks visitor sessions and per-request activity."""
+class VisitorTrackingMiddleware:
+    """Tracks visitor sessions and per-request activity (ASGI version for WS safety)."""
+    
+    def __init__(self, app):
+        self.app = app
 
-    async def dispatch(self, request: Request, call_next):
-        # Skip health/docs/ws endpoints
-        if request.url.path in SKIP_PATHS or request.url.path.startswith("/static") or request.url.path.startswith("/ws"):
-            return await call_next(request)
+    async def __call__(self, scope, receive, send):
+        if scope["type"] != "http":
+            return await self.app(scope, receive, send)
 
-        start_time = time.perf_counter()
+        path = scope.get("path", "")
+        if path in SKIP_PATHS or path.startswith("/static") or path.startswith("/ws"):
+            return await self.app(scope, receive, send)
 
-        # Get or create session ID from cookie
-        visitor_id = request.cookies.get(SESSION_COOKIE_NAME)
+        # GET COOKIE FROM SCOPE HEADERS (NOT FROM REQUEST OBJECT)
+        headers = {k.decode("latin1").lower(): v.decode("latin1") for k, v in scope.get("headers", [])}
+        cookie_header = headers.get("cookie", "")
+        
+        visitor_id = None
+        if SESSION_COOKIE_NAME in cookie_header:
+            import re
+            match = re.search(f"{SESSION_COOKIE_NAME}=([^;]+)", cookie_header)
+            if match:
+                visitor_id = match.group(1)
+
         new_session = False
         if not visitor_id:
             visitor_id = str(uuid.uuid4())
             new_session = True
 
-        # Process the request
-        response: Response = await call_next(request)
-        duration_ms = (time.perf_counter() - start_time) * 1000
+        async def send_wrapper(message):
+            if message["type"] == "http.response.start":
+                if new_session:
+                    msg_headers = list(message.get("headers", []))
+                    cookie = f"{SESSION_COOKIE_NAME}={visitor_id}; HttpOnly; Max-Age=31536000; Path=/; SameSite=lax"
+                    msg_headers.append((b"set-cookie", cookie.encode()))
+                    message["headers"] = msg_headers
+            await send(message)
 
-        # Log activity in the background (don't block the response)
-        asyncio.create_task(self._log_activity(request, response, visitor_id, new_session, duration_ms))
-
-        # Set session cookie
-        if new_session:
-            response.set_cookie(
-                SESSION_COOKIE_NAME,
-                visitor_id,
-                max_age=60 * 60 * 24 * 365,  # 1 year
-                httponly=True,
-                samesite="lax",
-            )
-
-        return response
+        return await self.app(scope, receive, send_wrapper)
 
     async def _log_activity(
         self,
