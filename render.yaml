@@ -32,9 +32,6 @@ services:
     name: crisissync-redis
     region: oregon
     plan: free
-    ipAllowList:
-      - source: 0.0.0.0/0
-        description: all
 
 # ── Database (Free Tier) ────────────────────────────────────────────────────
 databases:
